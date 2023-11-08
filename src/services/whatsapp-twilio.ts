@@ -1,10 +1,12 @@
 import Twilio from "twilio";
 import { PHONE_NUMBER, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN } from "../config";
 import { ApiService } from "./api-service";
+import { BotMessage } from "../entities/BotMessage";
 
 export class TwilioWhatsappBot {
   private client: Twilio.Twilio;
   private getFixturesOfTheDay = new ApiService();
+  private botMessage = new BotMessage("");
   // private getFixturesOfTheDay: new ApiService();
 
   constructor() {
@@ -27,7 +29,10 @@ export class TwilioWhatsappBot {
         body,
         to: `whatsapp:${to}`,
       });
-      return message.body;
+
+      this.botMessage.message = message.body;
+
+      return this.botMessage.message;
     } catch (error) {
       console.error(`Error sending WhatsApp message: ${error}`);
       throw error;
